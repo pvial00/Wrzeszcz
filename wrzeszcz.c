@@ -41,15 +41,14 @@ unsigned char *crypt(unsigned char *data, unsigned char *key, unsigned char *non
 
    c = 0;
    for (int x = 0; x < datalen; x++) {
-       k[i] = (k[i] + k[(i + 1) % keylen] + j) & 0xff;
-       j = (j + k[i] + c) & 0xff;
+       k[c] = (k[c] + k[(c + 1) % keylen] + j) & 0xff;
+       j = (j + k[c] + c) & 0xff;
        temp = s[c];
        s[c] = s[j];
        s[j] = temp;
-       output = s[j] ^ k[i];
+       output = s[j] ^ k[c];
        data[x] = data[x] ^ output;
        c = (c + 1) & 0xff;
-       i = (i + 1) % keylen;
    } 
 }
 
