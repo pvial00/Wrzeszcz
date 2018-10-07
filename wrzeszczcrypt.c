@@ -16,16 +16,10 @@ void keysetup(unsigned char *key, unsigned char *nonce, int keylen) {
     }
     for (c=0; c < keylen; c++) {
         k[c] = (k[c] + key[c]) & 0xff;
-        j = (j + k[c]) & 0xff; }
-    for (c = 0; c < diff; c++) {
-        k[c+keylen] = (k[c] + k[(c + 1) % diff]  + j + s[j]) & 0xff;
-        j = (j + k[c % diff] + c) & 0xff; 
-        temp = s[c & 0xff];
-	s[c & 0xff] = s[j];
-	s[j] = temp; }
+        j = (j + k[c] + c) & 0xff; }
     for (c = 0; c < 768; c++) {
-        k[c & 0xff] = (k[c & 0xff] + j) & 0xff;
-        j = (j + k[c & 0xff] + c) & 0xff; }
+        k[c % keylen] = (k[c % keylen] + j) & 0xff;
+        j = (j + k[c % keylen] + c) & 0xff; }
         temp = s[c & 0xff];
 	s[c & 0xff] = s[j];
 	s[j] = temp;
@@ -35,6 +29,12 @@ void keysetup(unsigned char *key, unsigned char *nonce, int keylen) {
     for (c = 0; c < 768; c++) {
         k[c & 0xff] = (k[c & 0xff] + j) & 0xff;
         j = (j + k[c & 0xff] + c) & 0xff; 
+        temp = s[c & 0xff];
+	s[c & 0xff] = s[j];
+	s[j] = temp; }
+    for (c = 0; c < diff; c++) {
+        k[c+keylen] = (k[c] + k[(c + 1) % diff] + j + s[j]) & 0xff;
+        j = (j + k[c % diff] + s[c] + c) & 0xff; 
         temp = s[c & 0xff];
 	s[c & 0xff] = s[j];
 	s[j] = temp; }
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     int output;
     int ch;
     int buflen = 131072;
-    int keylen = 32;
+    int keylen = 5;
     int bsize;
     unsigned char *key[keylen];
     unsigned char *password;
@@ -95,12 +95,12 @@ int main(int argc, char *argv[]) {
             for (b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-		output = s[j] ^ k[c];
-                block[b] = block[b] ^ output;
-                c = (c + 1) & 0xff;
 		temp = s[c];
 		s[c] = s[j];
 		s[j] = temp;
+		output = s[j] ^ k[c];
+                block[b] = block[b] ^ output;
+                c = (c + 1) & 0xff;
             }
             if (d == (blocks - 1) && extra != 0) {
                 bsize = extra;
@@ -123,12 +123,12 @@ int main(int argc, char *argv[]) {
             for (b = 0; b < bsize; b++) {
                 k[c] = (k[c] + k[(c + 1) & 0xff] + j) & 0xff;
                 j = (j + k[c] + c) & 0xff;
-		output = s[j] ^ k[c];
-                block[b] = block[b] ^ output;
-                c = (c + 1) & 0xff;
 		temp = s[c];
 		s[c] = s[j];
 		s[j] = temp;
+		output = s[j] ^ k[c];
+                block[b] = block[b] ^ output;
+                c = (c + 1) & 0xff;
             }
             if ((d == (blocks - 1)) && extra != 0) {
                 bsize = extra;
