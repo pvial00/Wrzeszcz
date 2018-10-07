@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     int output;
     int ch;
     int buflen = 131072;
-    int keylen = 5;
+    int keylen = 32;
     int bsize;
     unsigned char *key[keylen];
     unsigned char *password;
