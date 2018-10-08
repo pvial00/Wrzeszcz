@@ -3,6 +3,8 @@ Ultra High Speed Stream Cipher
 
 *** Warning this cipher has not undergone serious cryptanalysis and should not be used in production systems.
 
+Key sizes - 128, 256, 512, 1024, 2048 bit
+
 A BlueDye derivative cipher.  After a modified keysetup is run, the key expanded to fill a 256 byte array.  This make two arrays that Wrzeszcz maintains, one for the key stream k[] and the other for the substition state s[].
 
 The key generator formula is as follows:
