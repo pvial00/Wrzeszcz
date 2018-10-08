@@ -17,5 +17,5 @@ output = s[j] ^ k[c]
 
 The output is XOR'd with the input bytes to make the encrypted or decrypted stream.
 
-Wrzeszcz can encrypt 1GB of data in 2.8 seconds on some hardware and faster.
+Wrzeszcz can encrypt 1GB of data in 2.1 seconds on some hardware and faster.
 
