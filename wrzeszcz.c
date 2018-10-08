@@ -101,7 +101,7 @@ unsigned char * wrzeszcz_kdf (unsigned char *password, unsigned char *key, unsig
        z[n] = z[t];
        z[t] = tmp;
        kdf_out = z[t] ^ kdf_k[r];
-       key[r] = (unsigned char)key[r] ^ kdf_k[r];
+       key[r] = (unsigned char)key[r] ^ kdf_out;
        n = (n + 1) & 0xff;
        r = (r + 1) % keylen;
     }
